@@ -210,7 +210,7 @@ passwordLength { password } =
 
 errorsDecoder : Decoder (List String)
 errorsDecoder =
-    decode (\email username password -> List.concat [ email, username, password ])
+    Decode.succeed (\email username password -> List.concat [ email, username, password ])
         |> optionalError "email"
         |> optionalError "username"
         |> optionalError "password"

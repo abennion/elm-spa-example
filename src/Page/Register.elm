@@ -7,7 +7,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder, decodeString, field, string)
-import Json.Decode.Pipeline exposing (decode, optional)
+import Json.Decode.Pipeline exposing (optional)
 import Request.User exposing (storeSession)
 import Route exposing (Route)
 import Validate exposing (Validator, ifBlank, validate)

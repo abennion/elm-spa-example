@@ -5,7 +5,7 @@ import Html.Events exposing (stopPropagationOn)
 import Iso8601
 import Json.Decode as Decode exposing (Decoder, fail, succeed)
 import Parser
-import Time exposing (Posix)
+import Time
 
 
 {-| Useful when building up a Cmd via a pipeline, and then pairing it with
@@ -44,7 +44,7 @@ appendErrors model errors =
 
 {-| Decode an ISO-8601 date string.
 -}
-dateStringDecoder : Decoder Posix
+dateStringDecoder : Decoder Time.Posix
 dateStringDecoder =
     Decode.string
         |> Decode.andThen (\str -> fromResult str (Iso8601.toTime str))

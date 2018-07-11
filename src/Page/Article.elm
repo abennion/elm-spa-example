@@ -12,7 +12,7 @@ import Data.Session as Session exposing (Session)
 import Data.User as User exposing (User)
 import Data.User.Photo as UserPhoto
 import Data.User.Username as Username exposing (Username)
-import DateFormat
+import DateFormat as DF
 import Html exposing (..)
 import Html.Attributes exposing (attribute, class, disabled, href, id, placeholder)
 import Html.Events exposing (onClick, onInput, onSubmit)
@@ -23,6 +23,7 @@ import Request.Article.Comments
 import Request.Profile
 import Route
 import Task exposing (Task)
+import Time
 import Util exposing (pair, viewIf)
 import Views.Article
 import Views.Article.Favorite as Favorite
@@ -88,7 +89,7 @@ view session model =
     { title = article.title
     , content =
         div [ class "article-page" ]
-            [ viewBanner model.errors article author session.user
+            [ viewBanner session.timeZone model.errors article author session.user
             , div [ class "container page" ]
                 [ div [ class "row article-content" ]
                     [ div [ class "col-md-12" ]
@@ -101,7 +102,7 @@ view session model =
                             [ img [ UserPhoto.src author.image ] [] ]
                         , div [ class "info" ]
                             [ Views.Author.view author.username
-                            , Views.Article.viewTimestamp article
+                            , Views.Article.viewTimestamp session.timeZone article
                             ]
                         ]
                             ++ buttons
@@ -109,15 +110,15 @@ view session model =
                 , div [ class "row" ]
                     [ div [ class "col-xs-12 col-md-8 offset-md-2" ] <|
                         viewAddComment postingDisabled session.user
-                            :: List.map (viewComment session.user) model.comments
+                            :: List.map (viewComment session.timeZone session.user) model.comments
                     ]
                 ]
             ]
     }
 
 
-viewBanner : List String -> Article a -> Author -> Maybe User -> Html Msg
-viewBanner errors article author maybeUser =
+viewBanner : Time.Zone -> List String -> Article a -> Author -> Maybe User -> Html Msg
+viewBanner timeZone errors article author maybeUser =
     let
         buttons =
             viewButtons article author maybeUser
@@ -130,7 +131,7 @@ viewBanner errors article author maybeUser =
                     [ img [ UserPhoto.src author.image ] [] ]
                 , div [ class "info" ]
                     [ Views.Author.view author.username
-                    , Views.Article.viewTimestamp article
+                    , Views.Article.viewTimestamp timeZone article
                     ]
                 ]
                     ++ buttons
@@ -191,8 +192,8 @@ viewButtons article author maybeUser =
         ]
 
 
-viewComment : Maybe User -> Comment -> Html Msg
-viewComment user comment =
+viewComment : Time.Zone -> Maybe User -> Comment -> Html Msg
+viewComment timeZone user comment =
     let
         author =
             comment.author
@@ -211,7 +212,7 @@ viewComment user comment =
             , text " "
             , a [ class "comment-author", Route.href (Route.Profile author.username) ]
                 [ text (Username.toString comment.author.username) ]
-            , span [ class "date-posted" ] [ text (formatCommentTimestamp comment.createdAt) ]
+            , span [ class "date-posted" ] [ text (formatCommentTimestamp timeZone comment.createdAt) ]
             , viewIf isAuthor <|
                 span
                     [ class "mod-options"
@@ -222,9 +223,18 @@ viewComment user comment =
         ]
 
 
-formatCommentTimestamp _ =
-    -- Date.Format.format "%B %e, %Y"
-    ""
+formatCommentTimestamp : Time.Zone -> Time.Posix -> String
+formatCommentTimestamp timeZone timestamp =
+    DF.format
+        -- Example: "April 29, 2017"
+        [ DF.monthNameFull
+        , DF.text " "
+        , DF.dayOfMonthNumber
+        , DF.text ", "
+        , DF.yearNumber
+        ]
+        timeZone
+        timestamp
 
 
 

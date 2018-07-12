@@ -1,4 +1,4 @@
-module Util exposing (appendErrors, dateStringDecoder, onClickStopPropagation)
+module Util exposing (apiUrl, appendErrors, dateStringDecoder, onClickStopPropagation)
 
 import Html exposing (Attribute, Html)
 import Html.Events exposing (stopPropagationOn)
@@ -6,6 +6,11 @@ import Iso8601
 import Json.Decode as Decode exposing (Decoder, fail, succeed)
 import Parser
 import Time
+
+
+apiUrl : String -> String
+apiUrl str =
+    "https://conduit.productionready.io/api" ++ str
 
 
 onClickStopPropagation : msg -> Attribute msg

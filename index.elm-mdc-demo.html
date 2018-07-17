@@ -3,29 +3,28 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Conduit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The elm-mdc library</title>
+
+  <!-- mdc -->
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" />
   <link rel="stylesheet" href="material-components-web.css" />
+  <link rel="stylesheet" href="main.css" />
 </head>
 
-<body id="page-body" class="mdc-typography mdc-theme--background mdc-theme--on-primary">
+<body class="mdc-typography mdc-theme--background mdc-theme--on-primary">
   <script src="elm-mdc.js"></script>
-  <script src="elm.js"></script>
+  <script src="demo.js"></script>
   <script>
-    var app = Elm.Main.fullscreen(localStorage.session || null);
-
-    app.ports.storeSession.subscribe(function (session) {
-      localStorage.session = session;
+    app = Elm.Main.fullscreen();
+    app.ports.scrollTop.subscribe(function () {
+      document.scrollingElement.scrollTop = 0;
     });
-
-    window.addEventListener("storage", function (event) {
-      if (event.storageArea === localStorage && event.key === "session") {
-        app.ports.onSessionChange.send(event.newValue);
-      }
-    }, false);
   </script>
 </body>
 

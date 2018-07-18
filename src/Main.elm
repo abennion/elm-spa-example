@@ -5,6 +5,11 @@ import Data.Session exposing (Session)
 import Data.User as User exposing (User, Username)
 import Html exposing (..)
 import Json.Decode as Decode exposing (Value)
+import Material
+import Material.Button as Button
+import Material.Checkbox as Checkbox
+import Material.Options as Options
+import Material.Textfield as Textfield
 import Navigation exposing (Location)
 import Page.Article as Article
 import Page.Article.Editor as Editor
